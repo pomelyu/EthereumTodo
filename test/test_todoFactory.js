@@ -46,8 +46,27 @@ contract('TodoFactory', function(accounts) {
     assert.equal(numOfCompletedTodos.toNumber(), 1);
   });
 
-  it.skip('Should not complete invalid task', async () => {
+  it('Should not complete invalid task', async () => {
+    // Method1: Only work for Chai > 4.0
+    // const invalidComplete = async () => {
+    //   await contract.completeTodo(9527)
+    // };
+    // assert.throw(invalidComplete, Error);
 
+    // Method2: Assert with async, await
+    // assert.throws(invalidComplete, Error);
+    // let thrownInvalidComplete = false;
+    // try {
+    //   await contract.completeTodo(9527)
+    // } catch (e) {
+    //   thrownInvalidComplete = true;
+    // }
+    // assert.isTrue(thrownInvalidComplete);
+
+    // Method3:
+    contract.completeTodo(9527, (err) => {
+      assert.isDefined(err);
+    })
   });
 
   it('Should delete todo properly', async () => {
@@ -59,11 +78,15 @@ contract('TodoFactory', function(accounts) {
     assert.equal(numOfTodos.toNumber(), 1);
   });
 
-  it.skip('Should not delete invalid todo', async () => {
-
+  it('Should not delete invalid todo', () => {
+    contract.deleteTodo(9527, (err) => {
+      assert.isDefined(err);
+    });
   });
 
-  it.skip('Should not delete todo twice', async () => {
-
+  it('Should not delete todo twice', async () => {
+    contract.deleteTodo(todoId1, (err) => {
+      assert.isDefined(err);
+    })
   });
 });
