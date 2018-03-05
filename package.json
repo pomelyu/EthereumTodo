@@ -1,0 +1,22 @@
+{
+  "name": "ethereumtodo",
+  "version": "0.1.0",
+  "description": "Todo app with smart contract",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "lodash": "^4.17.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "truffle test"
+  },
+  "keywords": [
+    "ethereum",
+    "todo"
+  ],
+  "author": "cychien",
+  "license": "ISC"
+}

@@ -30,3 +30,6 @@ Temporary Items
 
 # Truffle
 build
+
+# node
+node_modules
