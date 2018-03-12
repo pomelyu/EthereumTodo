@@ -31,19 +31,20 @@ contract('TodoFactory', function(accounts) {
     const events2 = utils.getEvents(tx2, { event: 'OnTodoAdded', logIndex: 0 });
     todoId2 = events2[0].args.todoId;
 
-    const numOfTodos = await contract.getTotalTodos();
-
+    const result = await contract.getTodoList();
+    const numOfTodos = result[0].length;
     assert.notEqual(todoId1, todoId2);
-    assert.equal(numOfTodos.toNumber(), 2);
+    assert.equal(numOfTodos, 2);
   });
 
   it('Should complete todo properly', async () => {
     await contract.completeTodo(todoId1);
 
-    const numOfCompletedTodos = await contract.getCompleteTodos();
+    const result = await contract.getTodoList();
+    const numOfCompletedTodos = result[1].filter(isComplete => isComplete).length;
 
     await utils.assertEvent(contract, { event: 'OnTodoCompleted', args: { todoId: todoId1 } });
-    assert.equal(numOfCompletedTodos.toNumber(), 1);
+    assert.equal(numOfCompletedTodos, 1);
   });
 
   it('Should not complete invalid task', async () => {
@@ -72,10 +73,11 @@ contract('TodoFactory', function(accounts) {
   it('Should delete todo properly', async () => {
     await contract.deleteTodo(todoId1);
 
-    const numOfTodos = await contract.getTotalTodos();
+    const result = await contract.getTodoList();
+    const numOfTodos = result[0].length;
 
     await utils.assertEvent(contract, { event: 'OnTodoDeleted', args: { todoId: todoId1 } });
-    assert.equal(numOfTodos.toNumber(), 1);
+    assert.equal(numOfTodos, 1);
   });
 
   it('Should not delete invalid todo', () => {

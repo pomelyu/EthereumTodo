@@ -31,24 +31,20 @@ contract TodoFactory {
     return todos[_todoId].isComplete;
   }
 
-  function getTotalTodos() public view returns(uint numOfTodos) {
-    uint count = 0;
-    for (uint i = 0; i < todos.length; i++) {
-      if (isTodoValid(i)) {
-        count++;
-      }
-    }
-    return count;
-  }
+  function getTodoList() public view returns(uint[], bool[]) {
+    uint len;
+    uint[] memory valids;
 
-  function getCompleteTodos() public view returns(uint numOfTodos) {
-    uint count = 0;
-    for (uint i = 0; i < todos.length; i++) {
-      if (isTodoValid(i) && isTodoCompleted(i)) {
-        count++;
-      }
+    (valids, len) = _getValidTodos();
+
+    uint[] memory ids = new uint[](len);
+    bool[] memory isCompletes = new bool[](len);
+    for (uint i = 0; i < len; i++) {
+      uint id = valids[i];
+      ids[i] = id;
+      isCompletes[i] = todos[id].isComplete;
     }
-    return count;
+    return (ids, isCompletes);
   }
 
   function addTodo(string _taskName) public {
@@ -68,5 +64,18 @@ contract TodoFactory {
     todos[_todoId].isComplete = true;
 
     OnTodoCompleted(_todoId);
+  }
+
+  // Private methods
+  function _getValidTodos() private view returns(uint[] valids, uint length) {
+    uint[] memory validTodos = new uint[](todos.length);
+    uint count = 0;
+    for (uint i = 0; i < todos.length; i++) {
+      if (isTodoValid(i)) {
+        validTodos[count] = i;
+        count++;
+      }
+    }
+    return(validTodos, count);
   }
 }
