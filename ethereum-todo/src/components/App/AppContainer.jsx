@@ -1,32 +1,31 @@
-import React from 'react';
+import { connect } from 'react-redux';
 import _ from 'lodash';
 
 import App from './App.jsx';
 
-const mockTodos = [{
-  id: 0,
-  taskName: 'Task1',
-  isCompleted: false,
-},{
-  id: 1,
-  taskName: 'Task2',
-  isCompleted: true,
-}];
+import {
+  getTodoList,
+  addTodoTransaction,
+  deleteTodoTransaction,
+  completeTodoTransaction,
+} from '../../duck/todo';
 
-const incompleteCount = _.filter(mockTodos, { isCompleted: false }).length;
+const mapStateToProps = (state) => {
+  const transactionState = state.getIn(['transaction', 'state']);
+  const todos = state.getIn(['todo', 'todos']).toJS();
+  const incompleteCount = _.filter(todos, { isCompleted: false }).length;
+  return {
+    transactionState,
+    todos,
+    incompleteCount,
+  };
+}
 
-const mockAddTodo = (taskName) => console.log('Add new todo:', taskName);
-const mockDeleteTodo = (id) => console.log('Delete todo:', id);
-const mockCompleteTodo = (id) => console.log('Complete todo:', id);
+const mapDispatchToProps = (dispatch) => ({
+  getTodoList: () => dispatch(getTodoList()),
+  addTodo: (taskName) => dispatch(addTodoTransaction(taskName)),
+  deleteTodo: (todoId) => dispatch(deleteTodoTransaction(todoId)),
+  completeTodo: (todoId) => dispatch(completeTodoTransaction(todoId)),
+});
 
-const AppContainer = () => (
-  <App
-    todos={mockTodos}
-    incompleteCount={incompleteCount}
-    addTodo={mockAddTodo}
-    deleteTodo={mockDeleteTodo}
-    completeTodo={mockCompleteTodo}
-  />
-)
-
-export default AppContainer;
+export default connect(mapStateToProps, mapDispatchToProps)(App);
