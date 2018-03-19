@@ -31,6 +31,10 @@ contract TodoFactory {
         return todos[_todoId].isComplete;
     }
 
+    function getTodo(uint _todoId) public view isValidTodo(_todoId) returns(string, bool) {
+        return (todos[_todoId].taskName, todos[_todoId].isComplete);
+    }
+
     function getTodoList() public view returns(uint[], bool[]) {
         uint len;
         uint[] memory valids;

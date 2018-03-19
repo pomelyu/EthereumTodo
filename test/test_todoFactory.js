@@ -37,6 +37,15 @@ contract('TodoFactory', function(accounts) {
     assert.equal(numOfTodos, 2);
   });
 
+  it('Should get todo properly', async () => {
+    const result = await contract.getTodo(todoId1);
+
+    const taskName = result[0];
+    const isComplete = result[1];
+    assert.equal(taskName, Todo1.taskName);
+    assert.equal(isComplete, false);
+  });
+
   it('Should complete todo properly', async () => {
     await contract.completeTodo(todoId1);
 
