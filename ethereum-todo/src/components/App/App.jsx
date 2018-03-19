@@ -18,6 +18,10 @@ class App extends React.Component {
     this.renderTodos = this.renderTodos.bind(this);
   }
 
+  componentDidMount() {
+    this.props.getTodoList();
+  }
+
   handleSubmit(event) {
     event.preventDefault();
 
@@ -44,12 +48,12 @@ class App extends React.Component {
   }
 
   render() {
-    const { incompleteCount } = this.props;
+    const { transactionState, incompleteCount } = this.props;
     const { text } = this.state;
     return (
       <div className="container">
         <header>
-          <h1>Todo List ({incompleteCount})</h1>
+          <h1>Todo List ({incompleteCount}) {transactionState}</h1>
           <form className="new-task" onSubmit={this.handleSubmit} >
             <input
               type="text"
@@ -70,7 +74,9 @@ class App extends React.Component {
 
 App.propTypes = {
   todos: PropTypes.arrayOf(PropTypes.any),
+  transactionState: PropTypes.string,
   incompleteCount: PropTypes.number,
+  getTodoList: PropTypes.func,
   addTodo: PropTypes.func,
   deleteTodo: PropTypes.func,
   completeTodo: PropTypes.func,
@@ -78,7 +84,9 @@ App.propTypes = {
 
 App.defaultProps = {
   todos: [],
+  transactionState: '',
   incompleteCount: 0,
+  getTodoList: () => {},
   addTodo: () => {},
   deleteTodo: () => {},
   completeTodo: () => {},

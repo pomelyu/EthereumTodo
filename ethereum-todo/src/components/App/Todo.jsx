@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
-const Task = ({ todo, deleteTodo, completeTodo }) => {
+const Todo = ({ todo, deleteTodo, completeTodo }) => {
   const { id, taskName, isCompleted } = todo;
 
   const handleDeleted = () => {
@@ -32,13 +32,13 @@ const Task = ({ todo, deleteTodo, completeTodo }) => {
       />
 
       <span className="text">
-        <strong>Default</strong>: {taskName}
+        {`(${id})`} <strong>User</strong>: {taskName}
       </span>
     </li>
   );
 }
 
-Task.propTypes = {
+Todo.propTypes = {
   todo: PropTypes.shape({
     id: PropTypes.oneOfType([ PropTypes.string, PropTypes.number ]).isRequired,
     taskName: PropTypes.string.isRequired,
@@ -48,4 +48,4 @@ Task.propTypes = {
   deleteTodo: PropTypes.func.isRequired,
 };
 
-export default Task;
+export default Todo;
