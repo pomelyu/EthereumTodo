@@ -17,23 +17,26 @@ const setTodoList = (todos) => ({
   payload: { todos },
 });
 
-export const getTodoList = () => (dispatch) => {
+export const getTodoList = () => async (dispatch) => {
   dispatch(transactionPending());
-  todoHelper.getTodoList((error, result) => {
-    if (error) {
-      dispatch(transactionError(error));
-      return;
-    }
-    dispatch(transactionFinished());
+  const todos = [];
+  try {
+    const result = await todoHelper.getTodoListAsync();
     const ids = result[0];
-    const isCompletes = result[1];
-    const todos = ids.map((id, idx) => ({
-      taskName: 'Default',
-      id: id.toNumber(),
-      isCompleted: isCompletes[idx],
-    }));
+    for (let idx = 0 ; idx < ids.length ; idx++) {
+      const todoId = ids[idx].toNumber();
+      const todo = await todoHelper.getTodoAsync(todoId);
+      todos.push({
+        taskName: todo[0],
+        id: todoId,
+        isCompleted: todo[1],
+      })
+    }
     dispatch(setTodoList(todos));
-  });
+    dispatch(transactionFinished());
+  } catch (error) {
+    dispatch(transactionError(error));
+  }
 };
 
 export const addTodoTransaction = (taskName) => (dispatch) => {
@@ -69,15 +72,11 @@ export const completeTodoTransaction = (todoId) => (dispatch) => {
   });
 };
 
-export const addTodo = (todoId) => ({
+export const addTodo = (todoId, taskName, isCompleted) => ({
   type: ADD_TODO,
-  payload: { todoId },
+  payload: { todoId, taskName, isCompleted },
 });
 
-// export const deleteTodo = (todoId) => ({
-//   type: DELETE_TODO,
-//   payload: { todoId },
-// });
 export const deleteTodo = (todoId) => ({
   type: DELETE_TODO,
   payload: { todoId },
@@ -104,14 +103,14 @@ const reducer = (state = TodoState, action) => {
 }
 
 const handleAddTodo = (state, payload) => {
-  const { todoId } = payload;
+  const { todoId, taskName, isCompleted } = payload;
   const index = state.get('todos').findIndex(v => (v.get('id') === todoId));
   if (index >= 0) return state;
   
   const todo = Immutable.fromJS({
-    taskName: 'Default',
+    taskName,
     id: todoId,
-    isCompleted: false,
+    isCompleted,
   });
   return state.set('todos', state.get('todos').push(todo));
 };
@@ -119,12 +118,16 @@ const handleAddTodo = (state, payload) => {
 const handleDeleteTodo = (state, payload) => {
   const { todoId } = payload;
   const index = state.get('todos').findIndex(v => (v.get('id') === todoId));
+  if (index < 0) return state;
+
   return state.set('todos', state.get('todos').delete(index));
 };
 
 const handleCompleteTodo = (state, payload) => {
   const { todoId } = payload;
   const index = state.get('todos').findIndex(v => (v.get('id') === todoId));
+  if (index < 0) return state;
+
   return state.setIn(['todos', index, 'isCompleted'], true);
 }
 

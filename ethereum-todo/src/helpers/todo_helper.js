@@ -9,6 +9,35 @@ export function getTodoList(callback) {
   }, callback);
 }
 
+export function getTodoListAsync() {
+  return new Promise((resolve, reject) => {
+    getTodoList((error, result) => {
+      if (error)
+        reject(error);
+      else
+        resolve(result);
+    });
+  });
+}
+
+export function getTodo(todoId, callback) {
+  contract.getTodo(todoId, {
+    from: web3.eth.accounts[0],
+    gas:200000,
+  }, callback);
+}
+
+export function getTodoAsync(todoId) {
+  return new Promise((resolve, reject) => {
+    getTodo(todoId, (error, result) => {
+      if (error)
+        reject(error);
+      else
+        resolve(result);
+    });
+  });
+}
+
 export function addTodo(taskName, callback) {
   const gas = contract.addTodo.estimateGas(taskName);
   console.log('AddTodo: Estimated gas', gas);
