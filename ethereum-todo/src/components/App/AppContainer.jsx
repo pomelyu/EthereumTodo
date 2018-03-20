@@ -10,6 +10,8 @@ import {
   completeTodoTransaction,
 } from '../../duck/todo';
 
+import { showLogs } from '../../duck/logs';
+
 const mapStateToProps = (state) => {
   const transactionState = state.getIn(['transaction', 'state']);
   const todos = state.getIn(['todo', 'todos']).toJS();
@@ -26,6 +28,7 @@ const mapDispatchToProps = (dispatch) => ({
   addTodo: (taskName) => dispatch(addTodoTransaction(taskName)),
   deleteTodo: (todoId) => dispatch(deleteTodoTransaction(todoId)),
   completeTodo: (todoId) => dispatch(completeTodoTransaction(todoId)),
+  showLogs: () => dispatch(showLogs()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -7,6 +7,9 @@ import App from './components/App';
 import registerServiceWorker from './registerServiceWorker';
 import store from './store';
 
+import 'antd/lib/button/style/css';
+import 'antd/lib/modal/style/css';
+
 import './config/web3_config';
 import './events/todo_events';
 
