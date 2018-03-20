@@ -118,12 +118,16 @@ const handleAddTodo = (state, payload) => {
 const handleDeleteTodo = (state, payload) => {
   const { todoId } = payload;
   const index = state.get('todos').findIndex(v => (v.get('id') === todoId));
+  if (index < 0) return state;
+
   return state.set('todos', state.get('todos').delete(index));
 };
 
 const handleCompleteTodo = (state, payload) => {
   const { todoId } = payload;
   const index = state.get('todos').findIndex(v => (v.get('id') === todoId));
+  if (index < 0) return state;
+
   return state.setIn(['todos', index, 'isCompleted'], true);
 }
 
