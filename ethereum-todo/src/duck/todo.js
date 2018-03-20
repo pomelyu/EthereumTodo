@@ -24,7 +24,7 @@ export const getTodoList = () => async (dispatch) => {
     const result = await todoHelper.getTodoListAsync();
     const ids = result[0];
     for (let idx = 0 ; idx < ids.length ; idx++) {
-      const todoId = ids[idx].toNumber();
+      const todoId = ids[idx];
       const todo = await todoHelper.getTodoAsync(todoId);
       todos.push({
         taskName: todo[0],
@@ -39,20 +39,19 @@ export const getTodoList = () => async (dispatch) => {
   }
 };
 
-export const addTodoTransaction = (taskName) => (dispatch) => {
+export const addTodoTransaction = (taskName) => async (dispatch) => {
   dispatch(transactionPending());
-  todoHelper.addTodo(taskName, (error, result) => {
-    if (error) {
-      dispatch(transactionError(error));
-      return;
-    }
+  try {
+    await todoHelper.addTodoAsync(taskName);
     dispatch(transactionFinished());
-  });
+  } catch (error) {
+    dispatch(transactionError(error));
+  }
 };
 
 export const deleteTodoTransaction = (todoId) => (dispatch) => {
   dispatch(transactionPending());
-  todoHelper.deleteTodo(todoId, (error, result) => {
+  todoHelper.deleteTodoAsync(todoId, (error, result) => {
     if (error) {
       dispatch(transactionError(error));
       return;
@@ -63,7 +62,7 @@ export const deleteTodoTransaction = (todoId) => (dispatch) => {
 
 export const completeTodoTransaction = (todoId) => (dispatch) => {
   dispatch(transactionPending());
-  todoHelper.completeTodo(todoId, (error, result) => {
+  todoHelper.completeTodoAsync(todoId, (error, result) => {
     if (error) {
       dispatch(transactionError(error));
       return;
