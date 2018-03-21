@@ -4,6 +4,8 @@ import { DEFAULT_USER } from '../config/constants';
 
 // Method
 export async function getTodoListAsync() {
+  const gas = await contract.methods.getTodoList().estimateGas();
+  console.log('Get TodoList: Estimated gas', gas);
   const result = await contract.methods.getTodoList().call({
     from: DEFAULT_USER,
     gas:200000,
@@ -12,6 +14,8 @@ export async function getTodoListAsync() {
 }
 
 export async function getTodoAsync(todoId) {
+  const gas = await contract.methods.getTodo(todoId).estimateGas();
+  console.log('Get Todo: Estimated gas', gas);
   const result = await contract.methods.getTodo(todoId).call({
     from: DEFAULT_USER,
     gas:200000,
