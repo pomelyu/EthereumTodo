@@ -1,78 +1,51 @@
-import web3 from '../config/web3_config';
 import contract from '../contracts/todo_contract';
 
+import { DEFAULT_USER } from '../config/constants';
+
 // Method
-export function getTodoList(callback) {
-  contract.getTodoList({
-    from: web3.eth.accounts[0],
+export async function getTodoListAsync() {
+  const gas = await contract.methods.getTodoList().estimateGas();
+  console.log('Get TodoList: Estimated gas', gas);
+  const result = await contract.methods.getTodoList().call({
+    from: DEFAULT_USER,
     gas:200000,
-  }, callback);
-}
-
-export function getTodoListAsync() {
-  return new Promise((resolve, reject) => {
-    getTodoList((error, result) => {
-      if (error)
-        reject(error);
-      else
-        resolve(result);
-    });
   });
+  return result;
 }
 
-export function getTodo(todoId, callback) {
-  contract.getTodo(todoId, {
-    from: web3.eth.accounts[0],
+export async function getTodoAsync(todoId) {
+  const gas = await contract.methods.getTodo(todoId).estimateGas();
+  console.log('Get Todo: Estimated gas', gas);
+  const result = await contract.methods.getTodo(todoId).call({
+    from: DEFAULT_USER,
     gas:200000,
-  }, callback);
-}
-
-export function getTodoAsync(todoId) {
-  return new Promise((resolve, reject) => {
-    getTodo(todoId, (error, result) => {
-      if (error)
-        reject(error);
-      else
-        resolve(result);
-    });
   });
+  return result;
 }
 
-export function addTodo(taskName, callback) {
-  const gas = contract.addTodo.estimateGas(taskName);
+export async function addTodoAsync(taskName) {
+  const gas = await contract.methods.addTodo(taskName).estimateGas();
   console.log('AddTodo: Estimated gas', gas);
-  contract.addTodo(taskName, {
-    from: web3.eth.accounts[0],
-    gas:200000,
-  }, callback);
+  await contract.methods.addTodo(taskName).send({
+    from: DEFAULT_USER,
+    gas: 200000,
+  });
 }
 
-export function deleteTodo(todoId, callback) {
-  const gas = contract.deleteTodo.estimateGas(todoId);
+export async function deleteTodoAsync(todoId) {
+  const gas = await contract.methods.deleteTodo(todoId).estimateGas();
   console.log('DeleteTodo: Estimated gas', gas);
-  contract.deleteTodo(todoId, {
-    from: web3.eth.accounts[0],
-    gas:200000,
-  }, callback);
+  await contract.methods.deleteTodo(todoId).send({
+    from: DEFAULT_USER,
+    gas: 200000,
+  });
 }
 
-export function completeTodo(todoId, callback) {
-  const gas = contract.completeTodo.estimateGas(todoId);
+export async function completeTodoAsync(todoId) {
+  const gas = await contract.methods.completeTodo(todoId).estimateGas();
   console.log('CompleteTodo: Estimated gas', gas);
-  contract.completeTodo(todoId, {
-    from: web3.eth.accounts[0],
-    gas:200000,
-  }, callback);
+  await contract.methods.completeTodo(todoId).send({
+    from: DEFAULT_USER,
+    gas: 200000,
+  });
 }
-
-
-
-// web3 v1.0
-// const contract = new web3.eth.Contract(TodoFactoryJSON.abi, '0x21e4624c5a0b3fda81d0833d412dded2bb3a7a7c')
-
-// contract.events.OnTodoAdded({}, (err, event) => {
-//   console.log(err);
-//   console.log(event);
-// });
-
-// contract.methods.addTodo('Task1').call();

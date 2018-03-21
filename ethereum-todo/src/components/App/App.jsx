@@ -1,8 +1,10 @@
 // modified from https://github.com/meteor/simple-todos.git
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Button } from 'antd';
 
 import Todo from './Todo.jsx';
+import LogsModal from './LogsModal';
 
 // App component - represents the whole app
 class App extends React.Component {
@@ -34,7 +36,7 @@ class App extends React.Component {
     const text = event.target.value;
     this.setState({ text });
   }
-
+  
   renderTodos() {
     const { todos, deleteTodo, completeTodo } = this.props;
     return todos.map((todo) => (
@@ -48,12 +50,13 @@ class App extends React.Component {
   }
 
   render() {
-    const { transactionState, incompleteCount } = this.props;
+    const { transactionState, incompleteCount, showLogs } = this.props;
     const { text } = this.state;
     return (
       <div className="container">
         <header>
           <h1>Todo List ({incompleteCount}) {transactionState}</h1>
+          <Button type="primary" onClick={showLogs}>Logs</Button>
           <form className="new-task" onSubmit={this.handleSubmit} >
             <input
               type="text"
@@ -67,6 +70,7 @@ class App extends React.Component {
         <ul>
           {this.renderTodos()}
         </ul>
+        <LogsModal />
       </div>
     );
   }
@@ -80,6 +84,7 @@ App.propTypes = {
   addTodo: PropTypes.func,
   deleteTodo: PropTypes.func,
   completeTodo: PropTypes.func,
+  showLogs: PropTypes.func,
 };
 
 App.defaultProps = {
@@ -90,6 +95,7 @@ App.defaultProps = {
   addTodo: () => {},
   deleteTodo: () => {},
   completeTodo: () => {},
+  showLogs: () => {},
 };
 
 export default App;
