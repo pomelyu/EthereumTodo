@@ -1,8 +1,8 @@
-import contract from '../contracts/todo_contract';
+import contract from 'contracts/todo_contract';
+import * as todoHelper from 'helpers/todo_helper';
+import { addTodo, deleteTodo, completeTodo } from 'containers/App/duck/todo';
 
 import store from '../store';
-import * as todoHelper from '../helpers/todo_helper';
-import { addTodo, deleteTodo, completeTodo } from '../duck/todo';
 
 // Event
 contract.events.OnTodoAdded({

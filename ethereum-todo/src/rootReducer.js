@@ -1,12 +1,8 @@
 import { combineReducers } from 'redux-immutable';
-import todo from './duck/todo';
-import logs from './duck/logs';
-import transaction from './duck/transaction'
+import AppReducers from 'containers/App/duck';
 
 const rootReducer = combineReducers({
-  todo,
-  logs,
-  transaction,
+  ...AppReducers,
 });
 
 export default rootReducer;

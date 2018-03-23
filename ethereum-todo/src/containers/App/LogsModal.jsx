@@ -4,18 +4,13 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { Modal } from 'antd';
 
-import { hideLogs } from '../../duck/logs';
+import FlexBox from 'components/FlexBox';
+import { hideLogs } from './duck/logs';
 
-const BaseBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  > * {
-    margin-top: 10px;
-  }
-
-  > *:first-child {
-    margin-top: 0px;
-  }
+const Base = FlexBox.extend.attrs({
+  direction: 'column',
+  space: '10px',
+})`
 `;
 
 const Sheet = styled.div`
@@ -56,7 +51,7 @@ const LogsModal = ({ visible, logs, hideLogs }) => (
     onOk={hideLogs}
     onCancel={hideLogs}
   >
-    <BaseBox>
+    <Base>
       {logs.map(({ blockNumber, event, returnValues }) => (
         <Sheet key={blockNumber}>
           <NumberText>{`Block: ${String(blockNumber).padStart(3, '0')}`}</NumberText>
@@ -64,7 +59,7 @@ const LogsModal = ({ visible, logs, hideLogs }) => (
           <ArgsText>{JSON.stringify(returnValues)}</ArgsText>
         </Sheet>
       ))}
-    </BaseBox>
+    </Base>
   </Modal>
 );
 

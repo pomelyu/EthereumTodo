@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import * as logHelper from '../helpers/log_helper';
+import * as logHelper from 'helpers/log_helper';
 
 import { transactionPending, transactionError, transactionFinished } from './transaction';
 

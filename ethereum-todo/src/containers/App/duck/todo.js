@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import * as todoHelper from '../helpers/todo_helper';
+import * as todoHelper from 'helpers/todo_helper';
 
 import { transactionPending, transactionError, transactionFinished } from './transaction';
 

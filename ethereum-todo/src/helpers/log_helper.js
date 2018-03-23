@@ -1,4 +1,4 @@
-import contract from '../contracts/todo_contract';
+import contract from 'contracts/todo_contract';
 
 export async function getAllEventsAsync() {
   const events = await contract.getPastEvents('allEvents', {

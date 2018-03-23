@@ -1,6 +1,5 @@
-import contract from '../contracts/todo_contract';
-
-import { DEFAULT_USER } from '../config/constants';
+import { DEFAULT_USER } from 'config/constants';
+import contract from 'contracts/todo_contract';
 
 // Method
 export async function getTodoListAsync() {
