@@ -1,11 +1,11 @@
-import contract from 'contracts/todo_contract';
-import * as todoHelper from 'helpers/todo_helper';
+import todoContract from 'contracts/todoContract';
+import * as todoHelper from 'helpers/todoHelpers';
 import { addTodo, deleteTodo, completeTodo } from 'containers/App/duck/todo';
 
 import store from '../store';
 
 // Event
-contract.events.OnTodoAdded({
+todoContract.events.OnTodoAdded({
 }, async (error, result) => {
   if (error) {
     console.log(error);
@@ -17,7 +17,7 @@ contract.events.OnTodoAdded({
   console.log('Add', todoId);
 });
 
-contract.events.OnTodoDeleted({
+todoContract.events.OnTodoDeleted({
 }, (error, result) => {
   if (error) {
     console.log(error);
@@ -28,7 +28,7 @@ contract.events.OnTodoDeleted({
   console.log('Delete', todoId);
 });
 
-contract.events.OnTodoCompleted({
+todoContract.events.OnTodoCompleted({
 }, (error, result) => {
   if (error) {
     console.log(error);

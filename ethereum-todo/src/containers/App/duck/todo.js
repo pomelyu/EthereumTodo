@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import * as todoHelper from 'helpers/todo_helper';
+import * as todoHelpers from 'helpers/todoHelpers';
 
 import { transactionPending, transactionError, transactionFinished } from './transaction';
 
@@ -21,11 +21,11 @@ export const getTodoList = () => async (dispatch) => {
   dispatch(transactionPending());
   const todos = [];
   try {
-    const result = await todoHelper.getTodoListAsync();
+    const result = await todoHelpers.getTodoListAsync();
     const ids = result[0];
     for (let idx = 0 ; idx < ids.length ; idx++) {
       const todoId = ids[idx];
-      const todo = await todoHelper.getTodoAsync(todoId);
+      const todo = await todoHelpers.getTodoAsync(todoId);
       todos.push({
         taskName: todo[0],
         id: todoId,
@@ -42,7 +42,7 @@ export const getTodoList = () => async (dispatch) => {
 export const addTodoTransaction = (taskName) => async (dispatch) => {
   dispatch(transactionPending());
   try {
-    await todoHelper.addTodoAsync(taskName);
+    await todoHelpers.addTodoAsync(taskName);
     dispatch(transactionFinished());
   } catch (error) {
     dispatch(transactionError(error));
@@ -51,7 +51,7 @@ export const addTodoTransaction = (taskName) => async (dispatch) => {
 
 export const deleteTodoTransaction = (todoId) => (dispatch) => {
   dispatch(transactionPending());
-  todoHelper.deleteTodoAsync(todoId, (error, result) => {
+  todoHelpers.deleteTodoAsync(todoId, (error, result) => {
     if (error) {
       dispatch(transactionError(error));
       return;
@@ -62,7 +62,7 @@ export const deleteTodoTransaction = (todoId) => (dispatch) => {
 
 export const completeTodoTransaction = (todoId) => (dispatch) => {
   dispatch(transactionPending());
-  todoHelper.completeTodoAsync(todoId, (error, result) => {
+  todoHelpers.completeTodoAsync(todoId, (error, result) => {
     if (error) {
       dispatch(transactionError(error));
       return;

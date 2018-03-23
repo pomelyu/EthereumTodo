@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import * as logHelper from 'helpers/log_helper';
+import * as todoHelpers from 'helpers/todoHelpers';
 
 import { transactionPending, transactionError, transactionFinished } from './transaction';
 
@@ -21,7 +21,7 @@ export const showLogs = () => async (dispatch) => {
   dispatch({ type: SHOW_LOGS });
   dispatch(transactionPending());
   try {
-    const allEvents = await logHelper.getAllEventsAsync();
+    const allEvents = await todoHelpers.getAllEventsAsync();
     const logs = allEvents.map(({ blockNumber, event, returnValues }) => ({
       blockNumber,
       event,
