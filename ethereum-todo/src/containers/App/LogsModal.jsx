@@ -13,24 +13,18 @@ const Base = FlexBox.extend.attrs({
 })`
 `;
 
-const Sheet = styled.div`
-  display: flex;
-  flex-direction: row;
+const Sheet = FlexBox.extend.attrs({
+  direction: 'row',
+  space: '10px',
+})`
   align-items: center;
   padding: 5px;
   border-radius: 5px;
   border: 1px solid lightgrey;
-  > * {
-    margin-left: 10px;
-  }
-
-  > *:first-child {
-    margin-left: 0px;
-  }
 `;
 
 const NumberText = styled.div`
-  font-size: 16;
+  font-size: 16px;
   border: 1px solid black;
   padding: 4px;
   background-color: lightgrey;
@@ -41,7 +35,7 @@ const EventText = styled.div`
 `;
 
 const ArgsText = styled.div`
-  font-size: 14;
+  font-size: 14px;
 `;
 
 const LogsModal = ({ visible, logs, hideLogs }) => (
