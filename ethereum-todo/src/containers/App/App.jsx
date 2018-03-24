@@ -1,22 +1,30 @@
 // modified from https://github.com/meteor/simple-todos.git
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { Button } from 'antd';
 
-import Todo from './Todo.jsx';
+import FlexBox from 'components/FlexBox';
+import Header from 'components/Header';
+import H1 from 'components/H1';
+
+import TodoInput from './TodoInput';
+import Todo from './Todo';
 import LogsModal from './LogsModal';
+
+const Base = styled.div`
+  max-width: 600px;
+  margin: 0 auto;
+  min-height: 100%;
+  background: white;
+`;
 
 // App component - represents the whole app
 class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      text: '',
-    };
-
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.textOnChange = this.textOnChange.bind(this);
+    this.handleTodoSubmit = this.handleTodoSubmit.bind(this);
     this.renderTodos = this.renderTodos.bind(this);
   }
 
@@ -24,17 +32,8 @@ class App extends React.Component {
     this.props.getTodoList();
   }
 
-  handleSubmit(event) {
-    event.preventDefault();
-
-    const { text } = this.state;
+  handleTodoSubmit(text) {
     this.props.addTodo(text);
-    this.setState({ text: '' });
-  }
-
-  textOnChange(event) {
-    const text = event.target.value;
-    this.setState({ text });
   }
   
   renderTodos() {
@@ -51,27 +50,21 @@ class App extends React.Component {
 
   render() {
     const { transactionState, incompleteCount, showLogs } = this.props;
-    const { text } = this.state;
     return (
-      <div className="container">
-        <header>
-          <h1>Todo List ({incompleteCount}) {transactionState}</h1>
-          <Button type="primary" onClick={showLogs}>Logs</Button>
-          <form className="new-task" onSubmit={this.handleSubmit} >
-            <input
-              type="text"
-              value={text}
-              onChange={this.textOnChange}
-              placeholder="Type to add new tasks"
-            />
-          </form>
-        </header>
+      <Base>
+        <Header>
+          <FlexBox direction="row" space="10px">
+            <H1>Todo List ({incompleteCount}) {transactionState}</H1>
+            <Button type="primary" onClick={showLogs}>Logs</Button>
+          </FlexBox>
+          <TodoInput submitOnClick={this.handleTodoSubmit} />
+        </Header>
 
-        <ul>
+        <FlexBox direction="column">
           {this.renderTodos()}
-        </ul>
+        </FlexBox>
         <LogsModal />
-      </div>
+      </Base>
     );
   }
 }

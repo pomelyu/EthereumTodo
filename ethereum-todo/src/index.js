@@ -1,17 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import 'antd/dist/antd.css';
 
-import './index.css';
-import App from './components/App';
+import 'config/config-global-styles';
+import 'config/config-web3';
+import 'events/todoEvents';
+
+import App from 'containers/App';
+
+// import './index.css';
 import registerServiceWorker from './registerServiceWorker';
 import store from './store';
 
-import 'antd/lib/button/style/css';
-import 'antd/lib/modal/style/css';
-
-import './config/web3_config';
-import './events/todo_events';
 
 ReactDOM.render(
   <Provider store={store}>

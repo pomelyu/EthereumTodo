@@ -1,6 +1,32 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
+import styled from 'styled-components';
+
+import FlexBox from 'components/FlexBox';
+
+const Sheet = FlexBox.extend.attrs({
+  direction: 'row',
+  space: '10px',
+})`
+  padding: 15px;
+  border-bottom: #eee solid 1px;
+  align-items: center;
+
+  > span {
+    line-height: 14px;
+    text-decoration: ${props => (props.isCompleted ? 'line-through' : 'none')};
+    margin-right: auto;
+  }
+`;
+
+const SymbolButton = styled.button`
+  font-weight: bold;
+  background: none;
+  font-size: 1em;
+  border: none;
+  cursor: pointer;
+  align-self: flex-end;
+`;
 
 const Todo = ({ todo, deleteTodo, completeTodo }) => {
   const { id, taskName, isCompleted } = todo;
@@ -14,16 +40,8 @@ const Todo = ({ todo, deleteTodo, completeTodo }) => {
     completeTodo(id);
   }
 
-  const taskClassName = classnames({
-    checked: isCompleted,
-  });
-
   return (
-    <li className={taskClassName}>
-      <button className="delete" onClick={handleDeleted}>
-        &times;
-      </button>
-
+    <Sheet isCompleted={isCompleted}>
       <input
         type="checkbox"
         readOnly
@@ -31,10 +49,14 @@ const Todo = ({ todo, deleteTodo, completeTodo }) => {
         onClick={handleCompeted}
       />
 
-      <span className="text">
+      <span>
         {`(${id})`} <strong>User</strong>: {taskName}
       </span>
-    </li>
+
+      <SymbolButton onClick={handleDeleted}>
+        &times;
+      </SymbolButton>
+    </Sheet>
   );
 }
 

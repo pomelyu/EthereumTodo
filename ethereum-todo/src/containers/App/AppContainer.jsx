@@ -8,9 +8,9 @@ import {
   addTodoTransaction,
   deleteTodoTransaction,
   completeTodoTransaction,
-} from '../../duck/todo';
+} from './duck/todo';
 
-import { showLogs } from '../../duck/logs';
+import { showLogs } from './duck/logs';
 
 const mapStateToProps = (state) => {
   const transactionState = state.getIn(['transaction', 'state']);
