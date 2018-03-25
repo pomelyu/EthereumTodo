@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
+
+import { addTodoTransaction } from './duck/todo';
 
 const Input = styled.input`
   box-sizing: border-box;
@@ -38,7 +41,7 @@ class TodoInput extends React.Component {
     event.preventDefault();
 
     const { text } = this.state;
-    this.props.submitOnClick(text);
+    this.props.addTodo(text);
     this.setState({ text: '' });
   }
 
@@ -58,11 +61,17 @@ class TodoInput extends React.Component {
 };
 
 TodoInput.propTypes = {
-  submitOnClick: PropTypes.func,
+  addTodo: PropTypes.func,
 };
 
 TodoInput.defaultProps = {
-  submitOnClick: () => {},
+  addTodo: () => {},
 };
 
-export default TodoInput;
+const mapStateToProps = () => ({})
+
+const mapDispatchToProps = (dispatch) => ({
+  addTodo: (taskName) => dispatch(addTodoTransaction(taskName)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(TodoInput);
