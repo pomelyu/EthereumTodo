@@ -13,11 +13,11 @@
 ## Truffle - Ethereum Development Framework
 [truffle](http://truffleframework.com)是 Ethereum 的開發框架，可以建立測試用的區塊鏈，並將寫好的智慧合約編譯佈署，由於整個以太坊的開發環境變動的相當快，因此務必注意到不同函式庫對不同版本的資源。這裡使用最新的 truffle 版本(v4.1.3)，因為這個版本建立的測試用區塊鏈支援 websocket 的連線，配合 web3 v1.0 之後的版本可以利用 websocket 來監聽事件的觸發，這是比較有效率的作法。
 
-#### 安裝 truffle
+### 安裝 truffle
 ```bash
 npm install -g truffle@4.1.3
 ```
-#### 建立專案資料並初始化
+### 建立專案資料並初始化
 ```bash
 mkdir EthereumTodo && cd EthereumTodo
 truffle init
@@ -28,7 +28,7 @@ truffle init
 # test/        用來測試合約
 # truffle.js   設定 truffle
 ```
-#### 查看版本資訊 
+### 查看版本資訊 
 ```bash
 truffle version
 # Truffle v4.1.3 (core: 4.1.3)
@@ -36,7 +36,7 @@ truffle version
 ```
 請務必先檢查支援的 Solidity 版本。Solidity 是 Ethereum 的開發語言，和 javascript 的語法類似，由於目前這個語言變動很快，所以需要更加注意不同版本間的語法差異。
 
-#### 建立測試用區塊鏈
+### 建立測試用區塊鏈
 ```bash
 # ganache-cli 是 truffle 內附的指令，用來取代原先的 testrpc
 # 用 --seed apple banana cherry，指定隨機生成的種子，這樣可以確保每次建立的區塊鏈都是相同的，
@@ -70,7 +70,7 @@ module.exports = {
 ```
 
 ## 建立 Todo 合約
-#### 設定資料結構
+### 設定資料結構
 ```javascript
 // contracts/TodoFactory.sol
 // 指定編譯的版本
@@ -94,7 +94,7 @@ contract TodoFactory {
 mapping(int => Todo) idMapTodo;
 ```
 
-#### 加上操作資料的 Function(Method)
+### 加上操作資料的 Function(Method)
 ```javascript
 contract TodoFactory {
 
@@ -150,7 +150,7 @@ contract TodoFactory {
 -----
 另外 Solidity 中的 function 可以回傳複數的值，回傳時類似 tuple 以`()`包裹，不過回傳的資料型別只能是原始的資料型別或是陣列，也就是說不能回傳 `struct` 或者是 `string[]`。
 
-#### 加上 event 來紀錄已完成的事件
+### 加上 event 來紀錄已完成的事件
 
 如同前面提到的，執行 `addTodo`, `deleteTodo`, `completeTodo` 的時候都會以 *Transaction* 的方式執行（不然不會寫入資料），因此為了讓其他人知道執行完畢，並收到執行的結果，必須使用 event 觸發的方式。
 ```javascript
@@ -171,7 +171,7 @@ event OnTodoAdded(uint todoId);
 ```
 `event` 的宣告就像是 function 的 header，呼叫的方式也很像，利用 `event` 可以讓多個 client 監聽智慧合約的變化，而且這些 `event` 一旦被觸發就會被紀錄在區塊鏈裡面，未來可以很輕易的查詢過去發生過的紀錄 
 
-#### 編譯及佈署合約
+### 編譯及佈署合約
 原則上就是照抄 `migrations/1_initial_migration.js`
 ```javascript
 // migrations/4_deploy_todoFactory.js
@@ -201,7 +201,7 @@ truffle migrate
 
 # 其中 0x21e4624c5a0b3fda81d0833d412dded2bb3a7a7c 就是合約部署在區塊鏈上的位址
 ```
-#### 測試
+### 測試
 由於已經佈署在區塊鏈上的合約無法再被修改，最多只能利用事先設定一些函數來調整參數，因此每一次的合約更新都會導致地址的改變，在實際的應用上相當於每次重新都需要改變利用到的合約，因此佈署前的測試相當重要，另外測試對於 TDD（Test Drive Development） 或是 CI,CD 的流程也是不可或缺的。truffle 已經包含測試用的框架，利用 Mocha 和 Chai 這兩個在 js 中常用的套件（兩者所使用的版本可以從 [ganache-core](https://github.com/trufflesuite/ganache-core/blob/develop/package.json) 查看）
 
 以下先建立一個驗證合約是否正常發佈的簡單測試
@@ -309,12 +309,12 @@ truffle test
 
 Web3 提供 javascript 用來和以太坊互動的 API，這邊使用的版本是 v1.0，v1.0 與之前的版本有相當大的差別，除了額外提供 Socket 接口監聽事件，整個 API 的呼叫方式也完全不同，有些連運作的邏輯也不同，所以在查詢資料的部分需要特別注意這。前端的功能除了傳統 Todo App 新增、刪除、標記完成任務的功能之外，還可以列出這個 APP 過去的操作紀錄。開發上利用 React, Redux 的架構。
 
-#### 安裝 web3
+### 安裝 web3
 ```bash
 npm install web3
 ```
 
-#### 初始化 web3，區塊鏈的位址
+### 初始化 web3
 ```javascript
 // ethereum/src/config/config-web3.js
 
@@ -327,7 +327,7 @@ const web3 = new Web3('ws://localhost:8545');
 ```
 除了自己架設測試的區塊鏈外，也可以使用[公開的測試區塊鏈](https://medium.com/taipei-ethereum-meetup/ethereum-智能合約開發筆記-不用自己跑節點-使用-infura-和-web3-js-呼叫合約-2b8c852ed3d2)。由於儲存資料在區塊鏈上相當耗費成本（以
 
-#### 初始化合約
+### 初始化合約
 這邊需要用到合約的 abi 以及在區塊鏈上佈署的位址，首先先將 `build/contracts/TodoFactory.json` 複製到專案資料夾
 ```javascript
 // ethereum-todo/src/contracts/todoContract
@@ -341,7 +341,7 @@ export default todoContract;
 ```
 這樣就建立一個合約的實體可以操作
 
-#### 執行合約
+### 執行合約
 如同前面提到的，合約的執行分為 **Call** 和 **Transaction** 兩種，後者需要耗費 **gas**，另外我們也需要一個帳號來花費 **gas** 執行這些合約，可以從 truffle 建立的區塊鏈中找到測試用的帳號（也就是執行時建立的那十個），並可藉著 web3 提供的 api 取得帳號擁有的 gas：
 ```javascript
 // ethereum-todo/src/helpers/accountsHelper/balance.js
@@ -397,7 +397,7 @@ export async function addTodoAsync(taskName) {
 
 無論用 `call` 或是 `send` 都可以指定消耗的 **gas** 最大值（稱為 gas limit 這裡是 200000），gas limit 的設計是為了防止智慧合約在執行時產生無窮迴圈的情形，因為所有的運算都需要消耗 gas，一旦消耗 gas 的總量到達 gas limit，就會終止執行。
 
-#### 監聽執行的結果
+### 監聽執行的結果
 還是一樣 `Transaction` 的執行需要等到礦工們寫入資料才算真的完成，因此只能利用監聽事件的方式來確定。在這個專案中將這些監聽的處理放在 `events` 資料夾下，未來或許放在 middleware 是比較漂亮的方式。
 ```javascript
 // ethereum-todo/src/events/todoEvents.js
@@ -442,7 +442,7 @@ todoContract.events.OnTodoAdded({
 });
 ```
 
-#### 獲取過去的事件
+### 獲取過去的事件
 區塊鏈可以視為一個保存操作紀錄並且確保這些紀錄無法被竄改的資料庫，因此這些上述的操作事件都會被紀錄在區塊鏈上，web3 提供 `getPastEvents` 這個 api 來取得過去的事件（web3 在 v1.0 版本前要取得過去的事件需要持續監聽，不像現在的版本，會直接傳回結果）
 ```javascript
 // ethereum-todo/src/helpers/todoHelpers/eventLogs.js
