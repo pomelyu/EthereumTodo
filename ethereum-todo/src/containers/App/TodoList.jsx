@@ -9,6 +9,7 @@ import {
   deleteTodoTransaction,
   completeTodoTransaction,
 } from './duck/todo';
+import { todoSelector } from './selectors';
 import Todo from './Todo';
 
 class TodoList extends React.Component {
@@ -47,10 +48,9 @@ TodoList.defaultProps = {
   completeTodo: () => {},
 };
 
-const mapStateToProps = (state) => {
-  const todos = state.getIn(['todo', 'todos']).toJS();
-  return { todos };
-}
+const mapStateToProps = (state) => ({
+  todos: todoSelector(state).toJS(),
+});
 
 const mapDispatchToProps = (dispatch) => ({
   getTodoList: () => dispatch(getTodoList()),
