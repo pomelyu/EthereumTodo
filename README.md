@@ -102,6 +102,10 @@ contract TodoFactory {
   function addTodo(string _taskName) public {
     Todo memory todo = Todo(_taskName, false, true);
     uint todoId = todos.push(todo) - 1;
+
+    // 這裡沒有使用 return todoId，因為這個 function 在執行時有寫入資料，
+    // 所以需要礦工挖礦，才能完成寫入，這時的 return 只會 return transaction 的 hash 而不會是真正的 todoId
+    // 因此如果要知道這個 function 是否被執行完成，只能用觸發 event 的方式，底下會再加以解釋
   }
 }
 ```
@@ -119,7 +123,12 @@ Solidity 中 contract 和 function 的關係，可以類比成 class 和 functio
  - `view`: 代表此 function 不會對資料作任何的更改
  - `pure`: 代表此 function 不會操作到區塊鏈上的任何資料，所以 pure function 不會消耗任何的 **gas**
 
-也可以利用關鍵字 `modifier` 宣告自訂的 **modifier**，類似 python 或是 js ES7 中的 decorator（裝飾字），可以
+另外需要特別注意的是，solidity 中**執行函式的方式**被分成 `Call` 和 `Transaction` 兩種（雖然程式碼都是 function）
+ - `Call`: 代表執行函式但是不會對區塊鏈作任何的修改，可以使用「回傳值」，通常會被這樣使用的函式都會包含 `view` 或是 `pure` 這兩個關鍵字，如果對於一個有寫入的函式使用 call 的方式執行，這樣**不會**寫入任何的資料
+ - `Transaction`: 和 Call 相反，在執行上會寫入資料，因此需要等待礦工們將資料寫入，所以函式的「回傳值」僅代表 transaction hash
+以上可以參考這個[討論串](https://ethereum.stackexchange.com/questions/765/what-is-the-difference-between-a-transaction-and-a-call)
+
+modifier 也可以利用關鍵字 `modifier` 宣告自訂的 **modifier**，類似 python 或是 js ES7 中的 decorator（裝飾字），例如
 ```javascript
 contract TodoFactory {
   // modifier
@@ -142,17 +151,21 @@ contract TodoFactory {
 另外 Solidity 中的 function 可以回傳複數的值，回傳時類似 tuple 以`()`包裹，不過回傳的資料型別只能是原始的資料型別或是陣列，也就是說不能回傳 `struct` 或者是 `string[]`。
 
 #### 加上 event 來紀錄已完成的事件
+
+如同前面提到的，執行 `addTodo`, `deleteTodo`, `completeTodo` 的時候都會以 *Transaction* 的方式執行（不然不會寫入資料），因此為了讓其他人知道執行完畢，並收到執行的結果，必須使用 event 觸發的方式。
 ```javascript
 contract TodoFactory {
   // event
-  event OnTodoCompleted(uint todoId);
+event OnTodoAdded(uint todoId);
 
-  function completeTodo(uint _todoId) public isValidTodo(_todoId) {
-    todos[_todoId].isComplete = true;
-
+  function addTodo(string _taskName) public {
+    Todo memory todo = Todo(_taskName, false, true);
+    uint todoId = todos.push(todo) - 1;
+    
     // trigger event:
-    // 在 v0.4.21 之後，必須寫成 emit OnTodoCompleted(_todoId)
-    OnTodoCompleted(_todoId);
+    // 這樣才能取得原來的回傳值 todoId
+    // 在 v0.4.21 之後，必須寫成 emit OnTodoAdded(todoId)
+    OnTodoAdded(todoId);
   }
 }
 ```
@@ -234,7 +247,28 @@ contract('TodoFactory', function(accounts) {
   });
 }
 ```
-另外對於 contract 的 event 可以參考 stackoverflow 上的[討論](https://ethereum.stackexchange.com/questions/15353/how-to-listen-for-contract-events-in-javascript-tests)來驗證
+
+另外在測試的部分 truffle 對於 **Call** 和 **Transaction** 兩種執行方式並沒有區分，都是用一般函式的呼叫方式，差別在後者回傳的是 transaction hash，從 hash 可以取得觸發的 event 的資訊
+```javascript
+// test/utils.js
+function getEvents (tx, filter) {
+  const logs = tx.logs;
+  const events = _.filter(logs, filter);
+  return events;
+}
+
+// test/test_todoFactory.js
+contract('TodoFactory', function(accounts) {
+  it('Should add new todo properly', async () => {
+    // addTodo 的呼叫是 Transaction 所以即使 addTodo 中有回傳值，也無法收到
+    const tx1 = await contract.addTodo(Todo1.taskName);
+    const events1 = utils.getEvents(tx1, { event: 'OnTodoAdded', logIndex: 0 });
+    todoId1 = events1[0].args.todoId;
+  });
+}
+```
+
+另外如果要檢查執行時觸發的 event 可以參考 stackoverflow 上的[討論](https://ethereum.stackexchange.com/questions/15353/how-to-listen-for-contract-events-in-javascript-tests)來驗證
 ```javascript
 // test/utils.js
 function assertEvent(contract, filter) {
