@@ -49,26 +49,24 @@ export const addTodoTransaction = (taskName) => async (dispatch) => {
   }
 };
 
-export const deleteTodoTransaction = (todoId) => (dispatch) => {
+export const deleteTodoTransaction = (todoId) => async (dispatch) => {
   dispatch(transactionPending());
-  todoHelpers.deleteTodoAsync(todoId, (error, result) => {
-    if (error) {
-      dispatch(transactionError(error));
-      return;
-    }
+  try {
+    await todoHelpers.deleteTodoAsync(todoId);
     dispatch(transactionFinished());
-  });
+  } catch (error) {
+    dispatch(transactionError(error));
+  }
 };
 
-export const completeTodoTransaction = (todoId) => (dispatch) => {
+export const completeTodoTransaction = (todoId) => async (dispatch) => {
   dispatch(transactionPending());
-  todoHelpers.completeTodoAsync(todoId, (error, result) => {
-    if (error) {
-      dispatch(transactionError(error));
-      return;
-    }
+  try {
+    await todoHelpers.completeTodoAsync(todoId);
     dispatch(transactionFinished());
-  });
+  } catch (error) {
+    dispatch(transactionError(error));
+  }
 };
 
 export const addTodo = (todoId, taskName, isCompleted) => ({
