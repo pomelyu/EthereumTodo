@@ -11,7 +11,7 @@ module.exports = {
         if (!_.isEmpty(log)) {
           resolve(log);
         } else {
-          throw Error("Failed to find filtered event for " + filter.event);
+          reject(new Error("Failed to find filtered event for " + filter.event));
         }
       });
       event.stopWatching();
