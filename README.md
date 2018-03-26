@@ -1,6 +1,8 @@
 # 在區塊鏈上實作 Todo App
 
-這個 Project 練習如何藉著智慧合約（smart contract）在以太坊（Ethereum）區塊鏈上建立一個 DApp，一旦佈署之後。以下簡單的將傳統 web app 和 DApp 作類比
+## DApp
+
+在區塊鏈上的應用稱為 DApp(Decentralized app)，包含與使用者互動的前端，以及佈署在區塊鏈上的智慧合約和資料，這樣的設計確保資料和程式碼無法被竄改，也就是說可以當作具有公信力的「合約」，這個專案練習實作一個 Todo DApp，以下簡單的將傳統 web app 和 DApp 作類比
 
 | -- | --- | -- | -- |
 | -- | --- | -- | -- |
@@ -303,7 +305,9 @@ truffle test
 ## Web3
 [web3.js](https://github.com/ethereum/web3.js/): 
 
-Web3 提供 javascript 用來和以太坊互動的 API，這邊使用的版本是 v1.0，v1.0 與之前的版本有相當大的差別，除了額外提供 Socket 接口監聽事件，整個 API 的呼叫方式也完全不同，甚至有些連運作的邏輯也不同，所以在查詢資料的部分需要特別注意這點。前端的功能除了傳統 Todo App 新增、刪除、標記完成任務的功能之外，還可以列出這個 DAPP 過去的操作紀錄。開發上利用 React, Redux 的架構。
+Web3 提供 javascript 用來和以太坊互動的 API，這邊使用的版本是 v1.0，v1.0 與之前的版本有相當大的差別，除了額外提供 Socket 接口監聽事件，整個 API 的呼叫方式也完全不同，甚至有些連運作的邏輯也不同，所以在查詢資料的部分需要特別注意這點。前端的功能除了傳統 Todo App 新增、刪除、標記完成任務的功能之外，還可以列出這個 DAPP 過去的操作紀錄。但這邊只會強調與 web3 相關的接口部分，運作流程如下：
+
+![](./images/data-flow.png)
 
 ### 安裝 web3
 ```bash
@@ -312,7 +316,7 @@ npm install web3
 
 ### 初始化 web3
 ```javascript
-// ethereum/src/config/config-web3.js
+// ethereum-todo/src/config/config-web3.js
 
 // 使用 websocket
 // localhost:8545 是利用 truffle 建立的測試用區塊鏈
@@ -456,9 +460,5 @@ export async function getAllEventsAsync() {
   return events;
 }
 ```
-
-下圖簡單的顯示前端部份的運作流程：
-
-![](./images/data-flow.png)
 
 透過以上的兩個部分已經可以利用智慧合約在區塊鏈上寫一個 Todo DApp，不過使用的方式相當侷限，也忽略不少實際上可能會碰到的問題，事實上光是如何適當的儲存資料在區塊鏈上就是一大挑戰，這個專案可以當作簡單基底，繼續深入研究。
