@@ -36,7 +36,7 @@ truffle version
 # Truffle v4.1.3 (core: 4.1.3)
 # Solidity v0.4.19 (solc-js)
 ```
-請務必先檢查支援的 Solidity 版本。Solidity 是 Ethereum 的開發語言，和 javascript 的語法類似，由於目前這個語言變動很快，所以需要更加注意版本間的語法差異。
+請務必先檢查支援的 Solidity 版本。Solidity 是 Ethereum 的開發語言，按照官網上的說明，借鏡部分 C++, python, javascript 的語法(感覺比起 javascript 比較像借鏡 java)，由於目前這個語言變動很快，所以需要更加注意版本間的語法差異。
 
 ### 建立測試用區塊鏈
 ```bash
@@ -111,7 +111,7 @@ contract TodoFactory {
 。注意到上面的函式加上回傳值無法回傳預期的結果，底下會再加以解釋。
 
 -----
-Solidity 中 contract 和 function 的關係，可以類比成 class 和 function 的關係，contract 也是可以被繼承的。function 本身看起來和 javascript 中的非常像，不同的是可以加上一些 **modifier**，例如：
+Solidity 中 contract 和 function 的關係，可以類比成 class 和 function 的關係，contract 也是可以被繼承的。function 可以加上一些 **modifier**，例如：
  - `public`: 代表可以被外界調用
  - `private`: 代表此 function 只能被此合約中的其他 function 調用
  - `internal`: 代表可以被此合約和繼承的合約調用
